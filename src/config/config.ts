@@ -1,27 +1,28 @@
-import * as dotenv from "dotenv";
-import * as path from "path";
-import * as Joi from "joi";
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+import * as Joi from 'joi';
 
 interface EnvVars {
   NODE_ENV: string;
   PORT: number;
   DATA_BASE_URL: string;
+  JWT_SECRET: string;
 }
 
-dotenv.config({ path: path.join(__dirname, "../../.env") });
+dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 const envVarsSchema: Joi.ObjectSchema<EnvVars> = Joi.object<EnvVars>()
   .keys({
     NODE_ENV: Joi.string()
-      .valid("production", "development", "test")
+      .valid('production', 'development', 'test')
       .required(),
     PORT: Joi.number().default(3000),
-    DATA_BASE_URL: Joi.string().required().description("Mongo DB url"),
+    DATA_BASE_URL: Joi.string().required().description('Mongo DB url'),
   })
   .unknown();
 
 const { value: envVars, error } = envVarsSchema
-  .prefs({ errors: { label: "key" } })
+  .prefs({ errors: { label: 'key' } })
   .validate(process.env);
 
 if (error) {
@@ -31,6 +32,7 @@ if (error) {
 export const config = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
+  jwtSecret: envVars.JWT_SECRET,
   mongoose: {
     url: envVars.DATA_BASE_URL,
     options: {
