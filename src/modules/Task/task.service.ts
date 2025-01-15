@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Task } from './task.model';
 import { CreateTaskDto, UpdateTaskDto } from './dto';
 
@@ -15,15 +15,50 @@ export class TaskService {
     }
   }
 
-  async findAll(userId: string): Promise<Task[]> {
+  async findAll(
+    userId: string,
+    filters: { priority?: string; completed?: boolean }
+  ): Promise<Task[]> {
     try {
-      const tasks = await this.taskModel.find().where({ userId }).exec();
+      const filterQuery: any = { userId: new mongoose.Types.ObjectId(userId) };
+
+      if (filters.priority) {
+        filterQuery.priority = filters.priority;
+      }
+
+      if (typeof filters.completed === 'boolean') {
+        filterQuery.completed = filters.completed;
+      }
+
+      console.log(filterQuery, 'FILTER');
+
+      const tasks = await this.taskModel
+        .aggregate([
+          { $match: filterQuery },
+          {
+            $addFields: {
+              priorityValue: {
+                $switch: {
+                  branches: [
+                    { case: { $eq: ['$priority', 'high'] }, then: 1 },
+                    { case: { $eq: ['$priority', 'medium'] }, then: 2 },
+                    { case: { $eq: ['$priority', 'low'] }, then: 3 },
+                  ],
+                  default: 4,
+                },
+              },
+            },
+          },
+          { $sort: { priorityValue: 1, createdAt: 1 } },
+          { $project: { priorityValue: 0 } },
+        ])
+        .exec();
+
       return tasks;
     } catch (error) {
       throw error;
     }
   }
-
   async findOne(id: string, userId: string): Promise<Task | null> {
     try {
       const task = await this.taskModel.findById(id).where({ userId }).exec();

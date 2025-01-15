@@ -19,7 +19,15 @@ export const createTask = async (req: Request, res: Response) => {
 export const getTasks = async (req: Request, res: Response) => {
   try {
     const userId = req.query.userId as string;
-    const result = await taskService.findAll(userId);
+    const { priority, completed } = req.query;
+
+    const filter = {
+      priority: priority as string,
+      completed:
+        completed === 'true' ? true : completed === 'false' ? false : undefined,
+    };
+
+    const result = await taskService.findAll(userId, filter);
     sendResponse(res, result, 'Tasks fetched successfully', 200, true);
   } catch (error: any) {
     console.error(error);
