@@ -6,8 +6,11 @@ import {
   getTasks,
   updateTask,
 } from './task.controller';
+import { authenticateTokenMiddleware } from '../../middlewares/auth';
 
 export const taskRoute = express.Router();
+
+taskRoute.use(authenticateTokenMiddleware);
 
 taskRoute.get('/', getTasks);
 taskRoute.get('/:id', getTask);

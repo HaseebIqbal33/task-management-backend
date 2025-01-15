@@ -3,8 +3,6 @@ export interface LoginDto {
   password: string;
 }
 
-export interface RegisterDto {
+export interface RegisterDto extends LoginDto {
   name: string;
-  email: string;
-  password: string;
 }
