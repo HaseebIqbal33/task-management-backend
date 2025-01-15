@@ -7,6 +7,7 @@ import { router } from './routes';
 import httpStatus from 'http-status';
 import ApiError from './utils/ApiError';
 import { errorConverter, errorHandler } from './middlewares/error';
+import { config } from './config/config';
 const app = express();
 
 // set security HTTP headers
@@ -25,7 +26,7 @@ app.use(compression());
 
 // enable cors
 const corsOptions: CorsOptions = {
-  origin: '*',
+  origin: config.hostName,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   optionsSuccessStatus: 204,
 };

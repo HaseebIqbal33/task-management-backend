@@ -22,11 +22,13 @@ const taskSchema = new Schema<Task>({
   completed: {
     type: Boolean,
     default: false,
+    index: true,
   },
   priority: {
     type: String,
     enum: ['low', 'medium', 'high'],
     default: 'low',
+    index: true,
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,

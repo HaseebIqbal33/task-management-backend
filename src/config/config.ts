@@ -7,6 +7,7 @@ interface EnvVars {
   PORT: number;
   DATA_BASE_URL: string;
   JWT_SECRET: string;
+  HOST_NAME: string;
 }
 
 dotenv.config({ path: path.join(__dirname, '../../.env') });
@@ -33,6 +34,7 @@ export const config = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
   jwtSecret: envVars.JWT_SECRET,
+  hostName: envVars.HOST_NAME,
   mongoose: {
     url: envVars.DATA_BASE_URL,
     options: {
