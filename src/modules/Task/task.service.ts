@@ -15,40 +15,46 @@ export class TaskService {
     }
   }
 
-  async findAll(): Promise<Task[]> {
+  async findAll(userId: string): Promise<Task[]> {
     try {
-      const tasks = await this.taskModel.find().exec();
+      const tasks = await this.taskModel.find().where({ userId }).exec();
       return tasks;
     } catch (error) {
       throw error;
     }
   }
 
-  async findOne(id: string): Promise<Task | null> {
+  async findOne(id: string, userId: string): Promise<Task | null> {
     try {
-      const task = await this.taskModel.findById(id).exec();
+      const task = await this.taskModel.findById(id).where({ userId }).exec();
       return task;
     } catch (error) {
       throw error;
     }
   }
 
-  async update(id: string, updateTaskDto: UpdateTaskDto): Promise<Task | null> {
+  async update(
+    id: string,
+    updateTaskDto: UpdateTaskDto,
+    userId: string
+  ): Promise<Task | null> {
     try {
-      const updatedTask = await this.taskModel.findByIdAndUpdate(
-        id,
-        updateTaskDto,
-        { new: true }
-      );
+      const updatedTask = await this.taskModel
+        .findByIdAndUpdate(id, updateTaskDto, { new: true })
+        .where({ userId })
+        .exec();
       return updatedTask;
     } catch (error) {
       throw error;
     }
   }
 
-  async remove(id: string): Promise<Task | null> {
+  async remove(id: string, userId: string): Promise<Task | null> {
     try {
-      const deletedTask = await this.taskModel.findByIdAndDelete(id).exec();
+      const deletedTask = await this.taskModel
+        .findByIdAndDelete(id)
+        .where({ userId })
+        .exec();
       return deletedTask;
     } catch (error) {
       throw error;

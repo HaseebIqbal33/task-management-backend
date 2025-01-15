@@ -18,7 +18,8 @@ export const createTask = async (req: Request, res: Response) => {
 
 export const getTasks = async (req: Request, res: Response) => {
   try {
-    const result = await taskService.findAll();
+    const userId = req.query.userId as string;
+    const result = await taskService.findAll(userId);
     sendResponse(res, result, 'Tasks fetched successfully', 200, true);
   } catch (error: any) {
     console.error(error);
@@ -28,7 +29,8 @@ export const getTasks = async (req: Request, res: Response) => {
 
 export const getTask = async (req: Request, res: Response) => {
   try {
-    const result = await taskService.findOne(req.params.id);
+    const userId = req.query.userId as string;
+    const result = await taskService.findOne(req.params.id, userId);
     sendResponse(res, result, 'Task fetched successfully', 200, true);
   } catch (error: any) {
     console.error(error);
@@ -38,7 +40,8 @@ export const getTask = async (req: Request, res: Response) => {
 
 export const updateTask = async (req: Request, res: Response) => {
   try {
-    const result = await taskService.update(req.params.id, req.body);
+    const userId = req.query.userId as string;
+    const result = await taskService.update(req.params.id, req.body, userId);
     sendResponse(res, result, 'Task updated successfully', 200, true);
   } catch (error: any) {
     console.error(error);
@@ -48,7 +51,8 @@ export const updateTask = async (req: Request, res: Response) => {
 
 export const deleteTask = async (req: Request, res: Response) => {
   try {
-    const result = await taskService.remove(req.params.id);
+    const userId = req.query.userId as string;
+    const result = await taskService.remove(req.params.id, userId);
     sendResponse(res, result, 'Task deleted successfully', 200, true);
   } catch (error: any) {
     console.error(error);
