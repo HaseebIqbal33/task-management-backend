@@ -12,8 +12,8 @@ This is a simple Express.js API built with TypeScript for managing tasks. It inc
 - **Node.js**
 - **Express.js**
 - **TypeScript**
-- **MongoDB** (or other suitable database)
-- **Mongoose** (for MongoDB interaction)
+- **MongoDB**
+- **Mongoose**
 - **jsonwebtoken** (for JWT handling)
 - **bcrypt** (for password hashing)
 
