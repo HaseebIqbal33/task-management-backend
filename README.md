@@ -25,7 +25,7 @@ This is a simple Express.js API built with TypeScript for managing tasks. It inc
    git clone <repository-url>
    ```
 
-2. ** Install the dependencies:**
+2. **Install the dependencies:**
 
 ```bash
 npm install
