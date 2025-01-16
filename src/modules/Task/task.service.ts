@@ -30,8 +30,6 @@ export class TaskService {
         filterQuery.completed = filters.completed;
       }
 
-      console.log(filterQuery, 'FILTER');
-
       const tasks = await this.taskModel
         .aggregate([
           { $match: filterQuery },
