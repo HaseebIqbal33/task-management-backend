@@ -7,3 +7,11 @@ export interface CreateTaskDto {
 export interface UpdateTaskDto extends Partial<CreateTaskDto> {
   completed?: boolean;
 }
+
+export interface TaskQuery extends Record<string, unknown> {
+  userId: string;
+  priority: string;
+  completed: string;
+  pageSize: string;
+  currentPage: string;
+}

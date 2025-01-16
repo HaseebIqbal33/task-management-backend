@@ -17,8 +17,10 @@ export class TaskService {
 
   async findAll(
     userId: string,
-    filters: { priority?: string; completed?: boolean }
-  ): Promise<Task[]> {
+    filters: { priority?: string; completed?: boolean },
+    page: number = 1,
+    limit: number = 3
+  ): Promise<{ tasks: Task[]; total: number }> {
     try {
       const filterQuery: any = { userId: new mongoose.Types.ObjectId(userId) };
 
@@ -30,33 +32,39 @@ export class TaskService {
         filterQuery.completed = filters.completed;
       }
 
-      const tasks = await this.taskModel
-        .aggregate([
-          { $match: filterQuery },
-          {
-            $addFields: {
-              priorityValue: {
-                $switch: {
-                  branches: [
-                    { case: { $eq: ['$priority', 'high'] }, then: 1 },
-                    { case: { $eq: ['$priority', 'medium'] }, then: 2 },
-                    { case: { $eq: ['$priority', 'low'] }, then: 3 },
-                  ],
-                  default: 4,
+      const [tasks, total] = await Promise.all([
+        this.taskModel
+          .aggregate([
+            { $match: filterQuery },
+            {
+              $addFields: {
+                priorityValue: {
+                  $switch: {
+                    branches: [
+                      { case: { $eq: ['$priority', 'high'] }, then: 1 },
+                      { case: { $eq: ['$priority', 'medium'] }, then: 2 },
+                      { case: { $eq: ['$priority', 'low'] }, then: 3 },
+                    ],
+                    default: 4,
+                  },
                 },
               },
             },
-          },
-          { $sort: { priorityValue: 1, createdAt: 1 } },
-          { $project: { priorityValue: 0 } },
-        ])
-        .exec();
+            { $sort: { priorityValue: 1, createdAt: 1 } },
+            { $skip: (page - 1) * limit }, // Skip documents for pagination
+            { $limit: limit },
+            { $project: { priorityValue: 0 } },
+          ])
+          .exec(),
+        this.taskModel.countDocuments(filterQuery),
+      ]);
 
-      return tasks;
+      return { tasks, total };
     } catch (error) {
       throw error;
     }
   }
+
   async findOne(id: string, userId: string): Promise<Task | null> {
     try {
       const task = await this.taskModel.findById(id).where({ userId }).exec();

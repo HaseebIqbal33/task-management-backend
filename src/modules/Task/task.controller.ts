@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { TaskService } from './task.service';
 import { Task } from './task.model';
 import { sendResponse } from '../../utils/response';
+import { TaskQuery } from './dto';
 
 const taskService = new TaskService(Task);
 
@@ -16,10 +17,13 @@ export const createTask = async (req: Request, res: Response) => {
   }
 };
 
-export const getTasks = async (req: Request, res: Response) => {
+export const getTasks = async (
+  req: Request<unknown, unknown, unknown, TaskQuery>,
+  res: Response
+) => {
   try {
     const userId = req.query.userId as string;
-    const { priority, completed } = req.query;
+    const { priority, completed, pageSize, currentPage } = req.query;
 
     const filter = {
       priority: priority as string,
@@ -27,7 +31,12 @@ export const getTasks = async (req: Request, res: Response) => {
         completed === 'true' ? true : completed === 'false' ? false : undefined,
     };
 
-    const result = await taskService.findAll(userId, filter);
+    const result = await taskService.findAll(
+      userId,
+      filter,
+      +currentPage,
+      +pageSize
+    );
     sendResponse(res, result, 'Tasks fetched successfully', 200, true);
   } catch (error: any) {
     console.error(error);
