@@ -6,7 +6,6 @@ This is a simple Express.js API built with TypeScript for managing tasks. It inc
 - **JWT Authentication:** Secure endpoints with JSON Web Tokens.
 - **Data Validation:** Basic input validation using middleware or libraries.
 - **Error Handling:** Proper error handling and graceful error responses.
-- **Testing:** Unit and/or integration tests for core functionalities.
 
 ## Technologies Used
 
@@ -17,7 +16,6 @@ This is a simple Express.js API built with TypeScript for managing tasks. It inc
 - **Mongoose** (for MongoDB interaction)
 - **jsonwebtoken** (for JWT handling)
 - **bcrypt** (for password hashing)
-- **[Testing framework]** (e.g., Jest, Mocha)
 
 ## Installation
 
@@ -26,3 +24,15 @@ This is a simple Express.js API built with TypeScript for managing tasks. It inc
    ```bash
    git clone <repository-url>
    ```
+
+2. ** Install the dependencies:**
+
+```bash
+npm install
+```
+
+3. **Run Project:**
+
+```bash
+npm run dev
+```
